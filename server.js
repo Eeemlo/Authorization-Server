@@ -23,7 +23,7 @@ app.get("/api/protected", authenticateToken, (req, res) => {
 // Validera token
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = authHeader && authHeader.split(' ')[1];  // Token
 
     if(token == null) res.status(401).json({ message: "Användare ej auktoriserad för denna route - token saknas!"});
 
