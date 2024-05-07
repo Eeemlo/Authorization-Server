@@ -3,6 +3,19 @@
 */
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+//Anslut till MongoDB
+mongoose.set("strictQuery", false);
+mongoose.connect(process.env.DATABASE).then(() => {
+    console.log("Connected to MongoDB");
+}).catch((error) => {
+    console.error("Error connecting to database..");
+});
+
+// Användarmodell
+const User = require("../models/")
 
 // Lägg till ny användare
 router.post("/register", async (req, res) => {
