@@ -6,16 +6,20 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3001;
 app.use(bodyParser.json());
 
+//Middlewares
+app.use(cors());
+
 //Routes
 app.use("/api", authRoutes);
 
-// Skyddade routes
+// Skyddad route
 app.get("/api/protected", authenticateToken, (req, res) => {
     res.json({ message: "Skyddad route!" })
 });

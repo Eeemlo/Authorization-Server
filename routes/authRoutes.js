@@ -16,7 +16,37 @@ mongoose.connect(process.env.DATABASE).then(() => {
 });
 
 // Användarmodell
-const User = require("../models/User")
+const User = require("../models/User");
+
+//Hämta alla användare
+router.get("/users", async (req, res) => {
+    try {
+        let result = await User.find({});
+        console.log(result);
+        return res.json(result);
+    } catch(error) {
+        return res.status(500).json(error);
+    }
+});
+
+//Kontrollera om användarnamn är upptaget
+router.get("/users/user", async (req, res) => {
+    try {
+        const { username } = req.query;
+
+        //Kontrollera användarnamnet från query
+        const existingUser = await User.findOne({ username: username });
+
+        if(existingUser) {
+            return res.json({ exists: true })
+        } else {
+            return res.json({ exists: false})
+        }
+    } catch(error) {
+        return res.status(500).json(error);
+    }
+});
+
 
 // Lägg till ny användare
 router.post("/register", async (req, res) => {
@@ -26,13 +56,13 @@ router.post("/register", async (req, res) => {
         //Validera input (vidareutveckla med t ex minimumlängd på lösen och användarnamn)
         if(!username || !password) {
             return res.status(400).json({ error: "invalid input - send username and password"});
-        }
+        };
+            //Correct - save user
+            const user = new User({username, password});
+            await user.save();
+    
+            res.status(201).json({ message: "User created" });
 
-        //Correct - save user
-        const user = new User({username, password});
-        await user.save();
-
-        res.status(201).json({ message: "User created" });
 
     } catch (error) {
         res.status(500).json({ error: "Server error"});
